@@ -1,13 +1,13 @@
 const bcrypt = require("bcryptjs");
 
-const User = require("../models/user-model");
-const isEmpty = require("../validation/userValidation").isEmpty;
+const User = require("../../models/user-model");
+const isEmpty = require("../../api/validation/userValidation").isEmpty;
 
-const { generateToken, generateRefreshToken } = require("./token-controller");
+const { generateToken, generateRefreshToken } = require("../../api/controllers/token-controller");
 
 
 exports.login = async (req, res, next) => {
-    const validation = require("../validation/userValidation").loginValidation(req.body);
+    const validation = require("../../api/validation/userValidation").loginValidation(req.body);
     if (isEmpty(validation)) {
         try {
             const user = await User.findOne({ email: req.body.email });
@@ -21,7 +21,6 @@ exports.login = async (req, res, next) => {
                     } else if (!isMatch) {
                         return next({ code: 401, message: "Invalid Credentials" });
                     } else {
-
                         var token = await generateToken(user._id);
                         var refreshToken = await generateRefreshToken(user._id);
                         if (token && refreshToken) {
@@ -45,7 +44,7 @@ exports.login = async (req, res, next) => {
 
 
 exports.register = async (req, res) => {
-    const validation = require("../validation/userValidation").registerValidation(req.body);
+    const validation = require("../../api/validation/userValidation").registerValidation(req.body);
     if (isEmpty(validation)) {
         User.findOne({ email: req.body.email }).then(user => {
             if (user) {

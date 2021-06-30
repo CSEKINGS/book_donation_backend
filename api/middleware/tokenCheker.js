@@ -8,6 +8,7 @@ module.exports = function (req, res, next) {
         token = req.headers.authorization.split(' ')[1];
     }
     catch (err) {
+        err.message = "Token not Matching"
         return next(err);
     }
     if (token) {
@@ -15,11 +16,11 @@ module.exports = function (req, res, next) {
             if (err) {
                 return next(err);
             }
-            req.decoded = { id: decoded.id, email: decoded.email };
-            return res.send(req.decoded);
+            req.decoded = { id: decoded.id };
+            next();
         });
     }
     else {
-        return res.status(403).send({ err: true, message: "No token Provided" });
+        return next({message:"No token provided",code:403});
     }
 }
