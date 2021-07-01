@@ -33,7 +33,7 @@
 
 5. Endpoints
 
-   ```url
+   ```http
    localhost:5000/api/auth/login => to login [POST]
    localhost:5000/api/auth/register => to register[POST]
    localhost:5000/secret => to get secret access[GET]

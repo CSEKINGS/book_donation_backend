@@ -43,6 +43,7 @@ exports.login = async (req, res, next) => {
 }
 
 
+
 exports.register = async (req, res) => {
     const validation = require("../../api/validation/userValidation").registerValidation(req.body);
     if (isEmpty(validation)) {
@@ -51,18 +52,26 @@ exports.register = async (req, res) => {
                 return next({ code: 401, message: "Email already Exist" });
             }
             else {
-                const { name, email, password } = req.body;
+                const { name, email, password, mobileNo, address } = req.body;
+                const userLog = req.connection.remoteAddress;
                 bcrypt.genSalt(10, (err, salt) => {
                     bcrypt.hash(password, salt, (err, hash) => {
                         if (err) {
                             return next(err);
                         }
-                        User.create({ name: name, email: email, password: hash }, (err) => {
+                        User.create({ name: name, email: email, password: hash, mobileNo: mobileNo, address: address, userLog: { ip: userLog } }, async (err,user_r) => {
                             if (err) {
                                 return next(err);
                             }
                             else {
-                                return res.send("Successfully Registered");
+                                var token = await generateToken(user_r._id);
+                                var refreshToken = await generateRefreshToken(user_r._id);
+                                if (token && refreshToken) {
+                                    return res.status(201).send({ auth: true, message: "Logged In", token: token, refreshToken: refreshToken });
+                                }
+                                else {
+                                    return next({ code: 500, message: "Failed to generate token" });
+                                }
                             }
                         });
                     });
