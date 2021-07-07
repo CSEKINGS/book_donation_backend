@@ -8,7 +8,7 @@ let Userschema = new mongoose.Schema({
         trim: true
     },
     photo: {
-        type: Buffer,
+        type: String,
         default: "No profile updated"
     },
     email: {

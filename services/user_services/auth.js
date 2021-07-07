@@ -44,10 +44,11 @@ exports.login = async (req, res, next) => {
 
 
 
-exports.register = async (req, res) => {
+exports.register = async (req, res, next) => {
     const validation = require("../../api/validation/userValidation").registerValidation(req.body);
     if (isEmpty(validation)) {
-        User.findOne({ email: req.body.email }).then(user => {
+        User.findOne({ email: req.body.email }).then((err, user) => {
+            if (err) return next(err);
             if (user) {
                 return next({ code: 401, message: "Email already Exist" });
             }
@@ -59,8 +60,9 @@ exports.register = async (req, res) => {
                         if (err) {
                             return next(err);
                         }
-                        User.create({ name: name, email: email, password: hash, mobileNo: mobileNo, address: address, userLog: { ip: userLog } }, async (err,user_r) => {
+                        User.create({ name: name, email: email, password: hash, mobileNo: mobileNo, address: address, userLog: { ip: userLog } }, async (err, user_r) => {
                             if (err) {
+                                err.code = 500;
                                 return next(err);
                             }
                             else {
@@ -84,3 +86,52 @@ exports.register = async (req, res) => {
     }
 }
 
+
+// Get user detail
+exports.user_detail = (req, res, next) => {
+    const userID = req.decoded.id;
+    User.findOne({ _id: userID }, async (err, user_r) => {
+        if (err) {
+            return next(err);
+        }
+        else {
+            return res.status(200).send(user_r);
+        }
+    });
+}
+
+
+// Delete user detail
+exports.user_delete = (req, res, next) => {
+    const userID = req.decoded.id;
+    User.findByIdAndRemove({ _id: userID }, async (err) => {
+        if (err) {
+            return next(err);
+        }
+        else {
+            return res.status(201).send({ status: "success", message: "User deleted successfully" });
+        }
+    });
+}
+
+// Edit user details
+exports.user_edit = (req, res, next) => {
+    const { name, email, password, mobileNo, address } = req.body;
+    const userLog = req.connection.remoteAddress;
+    userID = req.decoded.id;
+    bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(password, salt, (err, hash) => {
+            if (err) {
+                return next(err);
+            }
+            User.findByIdAndUpdate({ _id: userID }, { $set: { name: name, email: email, password: hash, mobileNo: mobileNo, address: address, userLog: { ip: userLog } } }, async (err) => {
+                if (err) {
+                    return next(err);
+                }
+                else {
+                    return res.status(201).send({ status: "success", message: "User detail updated successfully" });
+                }
+            });
+        });
+    });
+}
