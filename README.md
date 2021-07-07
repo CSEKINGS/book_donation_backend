@@ -41,13 +41,13 @@
    localhost:5000/api/auth/register => to register[POST]
    localhost:5000/api/token => to refresh the access token[POST]
    localhost:5000/api/user/detail => to get user detail [GET]
-   localhost:5000/api/user/delete => to delete user account
-   localhost:5000/api/books/titles => to get book id and titles
-   localhost:5000/api/books/create => to create new book
-   localhost:5000/api/books/edit => to edit new book
-   localhost:5000/api/books/delete => to delete book details
-   localhost:5000/api/books/locations => to get book name, id and location
-   localhost:5000/api/books/detail => to get book detail by ID
-   localhost:5000/api/buy/request => to request book to the owner
-   localhost:5000/api/buy/owner => to get book owner detail
+   localhost:5000/api/user/delete => to delete user account [GET]
+   localhost:5000/api/books/titles => to get book id and titles [GET]
+   localhost:5000/api/books/create => to create new book [POST]
+   localhost:5000/api/books/edit => to edit new book [POST]
+   localhost:5000/api/books/delete => to delete book details [POST]
+   localhost:5000/api/books/locations => to get book name, id and location [GET]
+   localhost:5000/api/books/detail => to get book detail by ID [POST]
+   localhost:5000/api/buy/request => to request book to the owner [POST]
+   localhost:5000/api/buy/owner => to get book owner detail [POST]
    ```
