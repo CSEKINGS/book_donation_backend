@@ -66,4 +66,7 @@ router.route("/buy/request").post(tokenCheker,buy.book_buy);
 // View Book owner detail
 router.route("/buy/owner").post(tokenCheker,buy.book_owner);
 
+// View Book request notification
+router.route("/buy/notification").get(tokenCheker,buy.book_notification);
+
 module.exports = router;

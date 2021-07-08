@@ -13,9 +13,12 @@ exports.book_buy = (req, res, next) => {
         else {
             if (book_r) {
                 User.findOne({ _id: userID }, async (err, user_r) => {
-                    Mailer({ email: user_r.email, subject: `${book_r.name} requested by the user ${user_r.name}`, profile: "<h1>Testing...<h1>"});
+                    if (err) return next(err);
+                    Mailer({ email: user_r.email, subject: `${book_r.name} requested by the user ${user_r.name}`, profile: "<h1>Testing...<h1>" });
                 });
                 return res.status(201).send({ status: "success", message: "Book requested successfully" });
+            } else {
+                return next({ code: 404, message: "Book not found" });
             }
         }
     });
@@ -46,4 +49,33 @@ exports.book_owner = async (req, res, next) => {
     });
 }
 
-// View notiffications
+// Book request notification
+exports.book_notification = async (req, res, next) => {
+    var user_book = {};
+    const userID = req.decoded.id;
+    await Book.find({ userID: userID }, "-location ", (err, books) => {
+        if (err) {
+            return next(err);
+        } else {
+            books.forEach((a_book) => {
+                // User.findOne({ _id: a_book.receiverID }, "-id -userLog -password", (err, user_r) => {
+                //     if (err) return next(err);
+                //     user_book[a_book._id] = {
+                //         title: a_book.name,
+                //         receiverName: user_r.name,
+                //         email: user_r.email,
+                //         mobileNo: user_r.mobileNo,
+                //         requestTime: a_book.receivedTimestamp
+                //     };
+                // });
+                user_book[a_book._id] = {
+                    title: a_book.name,
+                    receiver: a_book.receiverID,
+                    requestTime: a_book.receivedTimestamp
+                };
+            });
+        }
+    });
+    // console.log(user_book);
+    return res.status(200).send(user_book);
+}

@@ -14,7 +14,6 @@ exports.book_create = async (req, res, next) => {
     });
 }
 
-
 // Search books
 exports.book_titles = async (req, res, next) => {
     var book_titles = {}
@@ -53,7 +52,6 @@ exports.book_edit = (req, res, next) => {
 exports.book_delete = (req, res, next) => {
     const { bookid } = req.body;
     const userID = req.decoded.id;
-    console.log(userID, bookid);
     Book.findOneAndRemove({ _id: bookid, userID: userID }, async (err, book_r) => {
         if (err) {
             return next(err);

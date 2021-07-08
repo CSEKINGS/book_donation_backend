@@ -41,10 +41,10 @@ BookSchema = new mongoose.Schema({
     //     type: String,
     //     default: function () { return (this.receiverID && "Donated") || "Available"; }
     // },
-    // quantity: {
-    //     type: Number,
-    //     default: 1
-    // },
+    quantity: {
+        type: Number,
+        default: 1
+    },
     receiverID: {
         type: Object,
         default: null
