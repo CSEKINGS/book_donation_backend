@@ -50,4 +50,5 @@
    localhost:5000/api/books/detail => to get book detail by ID [POST]
    localhost:5000/api/buy/request => to request book to the owner [POST]
    localhost:5000/api/buy/owner => to get book owner detail [POST]
+   localhost:5000/api/buy/notification => to get Any book request available [GET]
    ```
