@@ -46,7 +46,7 @@ BookSchema = new mongoose.Schema({
         default: 1
     },
     receiverID: {
-        type: Object,
+        type: [Object],
         default: null
     },
     receivedTimestamp: {

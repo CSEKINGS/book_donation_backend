@@ -6,16 +6,16 @@ const Mailer = require("../mail_services/sendMail");
 exports.book_buy = (req, res, next) => {
     const { bookid } = req.body;
     const userID = req.decoded.id;
-    Book.findOneAndUpdate({ _id: bookid, userID: { $ne: userID } }, { $set: { receiverID: userID } }, async (err, book_r) => {
+    Book.findOneAndUpdate({ _id: bookid, userID: { $ne: userID } }, { $push: { receiverID: userID } }, async (err, book_r) => {
         if (err) {
             return next(err);
         }
         else {
             if (book_r) {
-                User.findOne({ _id: userID }, async (err, user_r) => {
-                    if (err) return next(err);
-                    Mailer({ email: user_r.email, subject: `${book_r.name} requested by the user ${user_r.name}`, profile: "<h1>Testing...<h1>" });
-                });
+                // User.findOne({ _id: userID }, async (err, user_r) => {
+                //     if (err) return next(err);
+                //     // Mailer({ email: user_r.email, subject: `${book_r.name} requested by the user ${user_r.name}`, profile: "<h1>Testing...<h1>" });
+                // });
                 return res.status(201).send({ status: "success", message: "Book requested successfully" });
             } else {
                 return next({ code: 404, message: "Book not found" });
@@ -28,7 +28,7 @@ exports.book_buy = (req, res, next) => {
 exports.book_owner = async (req, res, next) => {
     const { bookid } = req.body;
     const userID = req.decoded.id;
-    Book.findOne({ _id: bookid, receiverID: userID }, "-receiverID -receivedTimestamp", async (err, book_r) => {
+    Book.findOne({ _id: bookid, receiverID: { $in: userID } }, "-receiverID -receivedTimestamp", async (err, book_r) => {
         if (err) {
             return next(err);
         }
@@ -58,26 +58,18 @@ exports.book_notification = async (req, res, next) => {
             return next(err);
         } else {
             books.forEach((a_book) => {
-                // User.findOne({ _id: a_book.receiverID }, "-id -userLog -password", (err, user_r) => {
-                //     if (err) return next(err);
-                //     user_book[a_book._id] = {
-                //         title: a_book.name,
-                //         receiverName: user_r.name,
-                //         email: user_r.email,
-                //         mobileNo: user_r.mobileNo,
-                //         requestTime: a_book.receivedTimestamp
-                //     };
-                // });
-                user_book[a_book._id] = {
-                    title: a_book.name,
-                    receiver: a_book.receiverID,
-                    requestTime: a_book.receivedTimestamp
-                };
+                for (var k of a_book.receiverID) {
+                    user_book[k] = {
+                        bookID:a_book._id,
+                        title: a_book.name,
+                        requestTime: a_book.receivedTimestamp
+                    };
+                }
             });
         }
     });
     for (var k in user_book) {
-        user_book[k]=await User.findOne({ _id: user_book[k].receiver }, "-_id -userLog -password", (user_r) => {return user_r});
+        user_book[k]['user'] = await User.findOne({ _id: k }, "-_id -userLog -password", (user_r) => { return user_r });
     }
     return res.status(200).send(user_book);
 }

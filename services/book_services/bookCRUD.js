@@ -34,7 +34,7 @@ exports.book_titles = async (req, res, next) => {
 exports.book_edit = (req, res, next) => {
     const { bookid, name, author, category, description, photo, location, quantity } = req.body;
     const userID = req.decoded.id;
-    Book.findOneAndRemove({ _id: bookid, userID: userID }, { $set: { name, author, photo, category, description, location, quantity } }, async (err, book_r) => {
+    Book.findOneAndUpdate({ _id: bookid, userID: userID }, { $set: { name, author, photo, category, description, location, quantity } }, async (err, book_r) => {
         if (err) {
             return next(err);
         }
