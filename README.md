@@ -14,7 +14,7 @@
    npm install
    ```
 
-3. Create a `.env` file and enter following
+3. Rename `.env-example` to `.env` file and enter following
 
    ```env
    MONGODB_URI = Your mongodb connection url
@@ -43,6 +43,7 @@
    localhost:5000/api/token => to refresh the access token[POST]
    localhost:5000/api/user/detail => to get user detail [GET]
    localhost:5000/api/user/delete => to delete user account [GET]
+   localhost:5000/api/books/all/{number} => to get lazyloading books view [GET]
    localhost:5000/api/books/titles => to get book id and titles [GET]
    localhost:5000/api/books/create => to create new book [POST]
    localhost:5000/api/books/edit => to edit new book [POST]
@@ -52,4 +53,5 @@
    localhost:5000/api/buy/request => to request book to the owner [POST]
    localhost:5000/api/buy/owner => to get book owner detail [POST]
    localhost:5000/api/buy/notification => to get Any book request available [GET]
+
    ```
