@@ -77,8 +77,10 @@ exports.book_notification = async (req, res, next) => {
             });
         }
     });
+    var i=1;
     for (var k in user_book) {
-        user_book[k]['user'] = await User.findOne({ _id: k }, "-_id -userLog -password", (user_r) => { return user_r });
+        user_book[i]['user'] = await User.findOne({ _id: k }, "-_id -userLog -password", (user_r) => { return user_r });
+        i++;
     }
     return res.status(200).send(user_book);
 }
