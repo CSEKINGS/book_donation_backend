@@ -5,7 +5,7 @@ const router = express.Router();
 const authentication = require("../../services/user_services/auth");
 const homeView_books = require("../../services/book_services/home_view");
 const bookCRUD = require("../../services/book_services/bookCRUD");
-const buy=require('../../services/buy_services/buy');
+const buy=require('../../services/cart_services/buy');
 
 //Token Generator
 const tokenController = require("../controllers/token-controller").token;
