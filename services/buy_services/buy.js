@@ -61,7 +61,6 @@ exports.book_owner = async (req, res, next) => {
 // Book request notification
 exports.book_notification = async (req, res, next) => {
     var user_book = {};
-    var notifications = {}
     const userID = req.decoded.id;
     await Book.find({ userID: userID }, "-location ", (err, books) => {
         if (err) {
