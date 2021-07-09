@@ -3,6 +3,7 @@ const router = express.Router();
 
 //services
 const authentication = require("../../services/user_services/auth");
+const homeView_books = require("../../services/book_services/home_view");
 const bookCRUD = require("../../services/book_services/bookCRUD");
 const buy=require('../../services/buy_services/buy');
 
@@ -38,6 +39,9 @@ router.route("/user/edit").post(tokenCheker,authentication.user_edit);
 
 
 /* Book Service */
+
+//Homeview Request || All books with Lazy Loading
+router.route("/books/all/:pageNo").get(tokenCheker,homeView_books);
 
 // Search books titles
 router.route("/books/titles").get(tokenCheker,bookCRUD.book_titles);
