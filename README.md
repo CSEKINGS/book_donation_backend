@@ -23,9 +23,10 @@
    EXPIRES_IN = access token expiration time
    REFRESH_SECRET_KEY = Refresh token secret key
    REFRESH_LIFE = refresh token expiration time 
-   SERVICE = Mail service
-   GMAIL = Username
-   GPASS = password
+   MAIL_HOST = Mail Host
+   MAIL_PORT = Mail Port / default 587
+   MAIL_ID = Your Mail Id
+   MAIL_PASS = Your Mail Password
    ```
 
 4. Run the `app.js` file

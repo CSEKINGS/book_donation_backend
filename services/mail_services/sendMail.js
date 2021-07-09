@@ -1,11 +1,12 @@
 const nodemailer = require("nodemailer");
 
-const sendEmail = (data) => {
+const sendEmail = async (data) => {
   const transporter = nodemailer.createTransport({
-    service: process.env.SERVICE,
+    host:process.env.MAIL_HOST,
+    port: process.env.MAIL_PORT,
     auth: {
-      user: process.env.GMAIL,
-      pass: process.env.GPASS,
+      user: process.env.MAIL_ID,
+      pass: process.env.MAIL_PASS,
     },
   });
 
@@ -15,13 +16,8 @@ const sendEmail = (data) => {
     html: data.profile,
   };
 
-  transporter.sendMail(mailOptions, function (err, info, next) {
-    if (err) {
-      next(err);
-    } else {
-      return true;
-    }
-  });
+  return await transporter.sendMail(mailOptions).then((info) => { return { "info": info } }).catch((err) => { return { "err": err } });
+
 };
 
 module.exports = sendEmail;

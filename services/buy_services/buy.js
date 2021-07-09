@@ -3,20 +3,29 @@ const Book = require("../../models/book-model");
 const Mailer = require("../mail_services/sendMail");
 
 // Book donation status
-exports.book_buy = (req, res, next) => {
+exports.book_buy = async (req, res, next) => {
     const { bookid } = req.body;
     const userID = req.decoded.id;
-    Book.findOneAndUpdate({ _id: bookid, userID: { $ne: userID } }, { $push: { receiverID: userID } }, async (err, book_r) => {
+    await Book.findOneAndUpdate({ _id: bookid, userID: { $ne: userID } }, { $push: { receiverID: userID } }, (err, book_r) => {
         if (err) {
             return next(err);
         }
         else {
             if (book_r) {
-                // User.findOne({ _id: userID }, async (err, user_r) => {
-                //     if (err) return next(err);
-                //     // Mailer({ email: user_r.email, subject: `${book_r.name} requested by the user ${user_r.name}`, profile: "<h1>Testing...<h1>" });
-                // });
-                return res.status(201).send({ status: "success", message: "Book requested successfully" });
+                User.findOne({ _id: userID },async (err, user_r) => {
+                    if (err) return next(err);
+                    mailer =await Mailer({ email: user_r.email, subject: `${book_r.name} requested by the user ${user_r.name}`, profile: "<h1>Testing...<h1>" });
+                    if(mailer.err){
+                        err = mailer.err
+                        err.code = 111
+                        err.message = "Connection refused or inability to open an SMTP stream"
+                        return next(err);
+                    }
+                    else{
+                        return res.status(200).send("Book requested successfully");
+                    }
+
+                });
             } else {
                 return next({ code: 404, message: "Book not found" });
             }
@@ -60,7 +69,7 @@ exports.book_notification = async (req, res, next) => {
             books.forEach((a_book) => {
                 for (var k of a_book.receiverID) {
                     user_book[k] = {
-                        bookID:a_book._id,
+                        bookID: a_book._id,
                         title: a_book.name,
                         requestTime: a_book.receivedTimestamp
                     };
