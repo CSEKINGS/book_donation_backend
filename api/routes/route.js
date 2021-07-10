@@ -3,7 +3,7 @@ const router = express.Router();
 
 //services
 const authentication = require("../../services/user_services/auth");
-const wishlist = require("../../services/user_services/wishlist");
+const wishlist = require("../../services/cart_services/wishlist");
 const notification = require("../../services/user_services/notification");
 const homeView_books = require("../../services/book_services/home_view");
 const userSearch = require("../../services/book_services/searchView");
