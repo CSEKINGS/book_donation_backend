@@ -52,6 +52,10 @@ BookSchema = new mongoose.Schema({
     receivedTimestamp: {
         type: String,
         default: function () { return this.receiverID && new Date().toLocaleString(); }
+    },
+    wishedUsers: {
+        type: [Object],
+        default: null
     }
 }, {
     versionKey: false

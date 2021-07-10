@@ -14,22 +14,6 @@ exports.book_create = async (req, res, next) => {
     });
 }
 
-// Search books
-exports.book_titles = async (req, res, next) => {
-    var book_titles = {}
-    await Book.find({}, (err, books) => {
-        if (err) {
-            return next(err);
-        }
-        else {
-            books.forEach((a_book) => {
-                book_titles[a_book._id] = a_book.name;
-            });
-        }
-    });
-    return res.status(200).send(book_titles);
-}
-
 // Edit book details
 exports.book_edit = (req, res, next) => {
     const { bookid, name, author, category, description, photo, location, quantity } = req.body;
@@ -67,22 +51,27 @@ exports.book_delete = (req, res, next) => {
 }
 
 // Books in map view
-exports.book_map = async (req, res, next) => {
-    var book_titles = {};
-    await Book.find({}, (err, books) => {
+exports.book_map = (req, res, next) => {
+    Book.find({}, "_id location name", (err, books) => {
         if (err) {
             return next(err);
         }
         else {
-            books.forEach((a_book) => {
-                book_titles[a_book._id] = {
-                    title: a_book.name,
-                    location: a_book.location
-                };
-            });
+            return res.status(200).send(books);
         }
     });
-    return res.status(200).send(book_titles);
+}
+
+// Search books
+exports.book_titles = (req, res, next) => {
+    Book.find({}, "_id name", (err, books) => {
+        if (err) {
+            return next(err);
+        }
+        else {
+            return res.status(200).send(books);
+        }
+    });
 }
 
 // Get Book detail by ID
@@ -90,7 +79,7 @@ exports.book_map = async (req, res, next) => {
 exports.book_detail = (req, res, next) => {
     const { bookid } = req.body;
     const userID = req.decoded.id;
-    Book.findOne({ _id: bookid }, async (err, book_r) => {
+    Book.findOne({ _id: bookid }, "-userID -receiverID -receivedTimestamp -wishedUsers", async (err, book_r) => {
         if (err) {
             return next(err);
         }
