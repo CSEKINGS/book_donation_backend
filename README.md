@@ -43,8 +43,9 @@
    localhost:5000/api/token => to refresh the access token[POST]
    localhost:5000/api/user/detail => to get user detail [GET]
    localhost:5000/api/user/delete => to delete user account [GET]
-   localhost:5000/api/user/wish => to add book to user wishlist
-   localhost:5000/api/user/wishlist => to view user wishlist
+   localhost:5000/api/user/wish => to add book to user wishlist [POST]
+   localhost:5000/api/user/wishlist => to view user wishlist [GTE]
+   localhost:5000/api/user/notification => to get Any book request available [GET]
    localhost:5000/api/books/all/{number} => to get lazyloading books view [GET]
    localhost:5000/api/books/titles => to get book id and titles [GET]
    localhost:5000/api/books/create => to create new book [POST]
@@ -54,6 +55,6 @@
    localhost:5000/api/books/detail => to get book detail by ID [POST]
    localhost:5000/api/buy/request => to request book to the owner [POST]
    localhost:5000/api/buy/owner => to get book owner detail [POST]
-   localhost:5000/api/buy/notification => to get Any book request available [GET]
+
 
    ```
