@@ -43,6 +43,8 @@
    localhost:5000/api/token => to refresh the access token[POST]
    localhost:5000/api/user/detail => to get user detail [GET]
    localhost:5000/api/user/delete => to delete user account [GET]
+   localhost:5000/api/user/wish => to add book to user wishlist
+   localhost:5000/api/user/wishlist => to view user wishlist
    localhost:5000/api/books/all/{number} => to get lazyloading books view [GET]
    localhost:5000/api/books/titles => to get book id and titles [GET]
    localhost:5000/api/books/create => to create new book [POST]
