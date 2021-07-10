@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../../models/user-model");
 const isEmpty = require("../../api/validation/userValidation").isEmpty;
 
-const { generateToken, generateRefreshToken } = require("../../api/controllers/token-controller");
+const { generateToken, generateRefreshToken } = require("../token_services/token-controller");
 
 
 exports.login = async (req, res, next) => {

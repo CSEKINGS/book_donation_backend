@@ -2,7 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const route = require('./api/routes/route');
 
-const tokenChecker = require("./api/middleware/tokenCheker");
 const errorHandler = require("./api/middleware/errorHandling");
 
 const connectDB = require("./configuration/dbConnection");

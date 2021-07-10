@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer");
 
 const sendEmail = async (data) => {
   const transporter = nodemailer.createTransport({
-    host:process.env.MAIL_HOST,
+    host: process.env.MAIL_HOST,
     port: process.env.MAIL_PORT,
     auth: {
       user: process.env.MAIL_ID,
@@ -16,7 +16,12 @@ const sendEmail = async (data) => {
     html: data.profile,
   };
 
-  return await transporter.sendMail(mailOptions).then((info) => { return { "info": info } }).catch((err) => { return { "err": err } });
+  return await transporter.sendMail(mailOptions).then((info) => {
+    return { "info": info }
+  })
+    .catch((err) => {
+      return { "err": err }
+    });
 
 };
 
