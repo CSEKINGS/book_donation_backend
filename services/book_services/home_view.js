@@ -1,4 +1,5 @@
 const listBooks = require("./controller/listBooks");
+const locationFinder = require("./controller/locationFinder");
 /**
  * HomeView 
  * @param {Request} req
@@ -8,12 +9,17 @@ const listBooks = require("./controller/listBooks");
 
 module.exports = async (req, res, next) => {
     const pageNo = req.params.pageNo || 1
-    ,coordinates = req.body.coordinates || [-23.539089, -46.790169]
-    
-    const bookTitles = await listBooks(coordinates,pageNo,query='');
+    ,coordinates = await locationFinder(req.decoded.id);  
+    if(coordinates.err){
+        err = coordinates.err;
+        err.code = 404;
+        err.message = "User Not Found"
+        return next(err);
+    }    
+    const bookTitles = await listBooks(coordinates.location,pageNo,query='');
     if(bookTitles.err){
         err = bookTitles.err;
-        err.code = 501
+        err.code = 501 
         err.message = "Server Error"
         return next(err);
     }

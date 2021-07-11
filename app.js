@@ -29,3 +29,7 @@ app.listen(PORT, () => {
   console.log("Sever running on port "+PORT);
 }
 );
+
+process.on('unhandledRejection', error => {
+  console.log('unhandledRejection', error.message);
+});

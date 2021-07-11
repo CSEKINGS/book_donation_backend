@@ -53,14 +53,14 @@ exports.register = async (req, res, next) => {
                 return next({ code: 401, message: "Email already Exist" });
             }
             else {
-                const { name, email, password, mobileNo, address, about } = req.body;
+                const { name, email, password, mobileNo, address, about,location } = req.body;
                 const userLog = req.connection.remoteAddress;
                 bcrypt.genSalt(10, (err, salt) => {
                     bcrypt.hash(password, salt, (err, hash) => {
                         if (err) {
                             return next(err);
                         }
-                        User.create({ name: name, email: email, password: hash, mobileNo: mobileNo, address: address, about: about, userLog: { ip: userLog } }, async (err, user_r) => {
+                        User.create({ name: name, email: email, password: hash, mobileNo: mobileNo, address: address, location:location, about: about, userLog: { ip: userLog } }, async (err, user_r) => {
                             if (err) {
                                 err.code = 500;
                                 return next(err);

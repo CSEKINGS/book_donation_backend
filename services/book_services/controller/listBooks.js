@@ -2,7 +2,7 @@
 const Book = require("../../../models/book-model");
 
 /**
- * HomeView 
+ * listBooks 
  * @param {Array} coordinates
  * @param {Number} pageNo
  * @param {String} query

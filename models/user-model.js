@@ -31,6 +31,10 @@ let Userschema = new mongoose.Schema({
         type: String,
         required:true
     },
+    location:{
+        type:Array,
+        required:true
+      },
     about: {
         type: String,
         default: "Nothing to show"
