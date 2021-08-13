@@ -15,7 +15,13 @@ connectDB();
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.send("Your API is Started");
+  var params = ['{"email":"","password":""}', '{"name":"","email":"","mobileNo":"","password":"","address":"","photo":""}', '{"refreshToken":""}-bearer token required', 'bearer token required', 'bearer token required', '{"name":"","email":"","mobileNo":"","address":"","photo":""}-bearer token required', 'bearer token required', '{"bookid":""}-bearer token required', 'bearer token required', 'bearer token required', 'bearer token required', 'bearer token required', '{"name":"","author":"","category":"","description":"","photo":"","location":[]}-bearer token required', '{"name":"","author":"","category":"","description":"","photo":"","location":[]}-bearer token required','{"bookid":""}-bearer token required','bearer token required','{"bookid":""}-bearer token required','{"bookid":""}-bearer token required','{"bookid":""}-bearer token required']
+  var info = `<h1>Book donation API Backend Manual</h1><b>root path: /api/</b><table><tr><th>Paths</th><th>Methods</th><th>Parameters</th></tr>`;
+  for (var i in route.stack) {
+      info = info + `<tr><td>${route.stack[i].route.path}</td><td>${Object.keys(route.stack[i].route.methods)}</td><td>${params[i]}</td></tr>`;
+  }
+  info = info + "</table>";
+  res.status(200).send(info);
 });
 
 app.use('/api', route);
