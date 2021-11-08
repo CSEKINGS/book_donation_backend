@@ -1,5 +1,7 @@
 # Book Donation Backend
 
+Check out current hosting here: https://book-donation-api.herokuapp.com/
+
 ## Installation
 
 1. Clone the repository
