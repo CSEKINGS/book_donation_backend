@@ -34,10 +34,10 @@ router.route("/token").post(tokenController);
 router.route("/user/detail").get(tokenChecker, authentication.user_detail);
 
 // Delete user detail
-router.route("/user/delete").get(tokenChecker, authentication.user_delete);
+router.route("/user/delete").delete(tokenChecker, authentication.user_delete);
 
 // Edit user detail
-router.route("/user/edit").post(tokenChecker, authentication.user_edit);
+router.route("/user/edit").put(tokenChecker, authentication.user_edit);
 
 // View Book request notification
 router.route("/user/notification").get(tokenChecker, notification.book_notification);
@@ -51,13 +51,13 @@ router.route("/user/wishlist").get(tokenChecker, wishlist.wishlist_view);
 /* Book Service */
 
 //Homeview Request || All books with Lazy Loading
-router.route("/books/all/:pageNo").get(tokenChecker,homeView_books);
+router.route("/books/all/:pageNo").get(tokenChecker, homeView_books);
 
 // Search books titles
 router.route("/books/titles").get(tokenChecker, bookCRUD.book_titles);
 
 // Search books by User query
-router.route("/books/search/:pageNo").get(tokenChecker,userSearch);
+router.route("/books/search/:pageNo").get(tokenChecker, userSearch);
 
 
 // Create book
