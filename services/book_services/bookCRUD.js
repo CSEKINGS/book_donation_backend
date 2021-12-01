@@ -2,9 +2,9 @@ const Book = require("../../models/book-model");
 
 // Create book
 exports.book_create = async(req, res, next) => {
-    const { name, author, category, description, photo, location, quantity } = req.body;
+    const { name, author, categeory, description, photo, location, quantity } = req.body;
     const userID = req.decoded.id;
-    Book.create({ name, author, photo, category, description, userID, location, quantity }, async(err, book_r) => {
+    Book.create({ name, author, photo, categeory, description, userID, location, quantity }, async(err, book_r) => {
         if (err) {
             return next(err);
         } else {
@@ -15,9 +15,9 @@ exports.book_create = async(req, res, next) => {
 
 // Edit book details
 exports.book_edit = (req, res, next) => {
-    const { bookid, name, author, category, description, photo, location, quantity } = req.body;
+    const { bookid, name, author, categeory, description, photo, location, quantity } = req.body;
     const userID = req.decoded.id;
-    Book.findOneAndUpdate({ _id: bookid, userID: userID }, { $set: { name, author, photo, category, description, location, quantity } }, async(err, book_r) => {
+    Book.findOneAndUpdate({ _id: bookid, userID: userID }, { $set: { name, author, photo, categeory, description, location, quantity } }, async(err, book_r) => {
         if (err) {
             return next(err);
         } else {

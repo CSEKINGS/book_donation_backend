@@ -11,7 +11,7 @@ BookSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    category: {
+    categeory: {
         type: String,
         required: true,
         trim: true
@@ -51,7 +51,7 @@ BookSchema = new mongoose.Schema({
     },
     receivedTimestamp: {
         type: String,
-        default: function () { return this.receiverID && new Date().toLocaleString(); }
+        default: function() { return this.receiverID && new Date().toLocaleString(); }
     },
     wishedUsers: {
         type: [Object],
