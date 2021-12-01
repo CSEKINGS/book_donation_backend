@@ -29,7 +29,6 @@ app.get('/', (req, res) => {
 
 app.use('/api', route);
 
-
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;

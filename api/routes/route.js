@@ -28,7 +28,7 @@ router.route('/auth/login').post(authentication.login);
 router.route("/auth/register").post(authentication.register);
 
 //Generate access token by refresh token
-router.route("/token").post(tokenController);
+router.route("/token").get(tokenController);
 
 // User detail
 router.route("/user/detail").get(tokenChecker, authentication.user_detail);
