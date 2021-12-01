@@ -1,4 +1,5 @@
 const Book = require("../../models/book-model");
+const User = require("../../models/user-model");
 
 // Create book
 exports.book_create = async(req, res, next) => {
@@ -15,9 +16,9 @@ exports.book_create = async(req, res, next) => {
 
 // Edit book details
 exports.book_edit = (req, res, next) => {
-    const { bookid, name, author, categeory, description, photo, location, quantity } = req.body;
+    const { bookId, name, author, categeory, description, photo, location, quantity } = req.body;
     const userID = req.decoded.id;
-    Book.findOneAndUpdate({ _id: bookid, userID: userID }, { $set: { name, author, photo, categeory, description, location, quantity } }, async(err, book_r) => {
+    Book.findOneAndUpdate({ _id: bookId, userID: userID }, { $set: { name, author, photo, categeory, description, location, quantity } }, async(err, book_r) => {
         if (err) {
             return next(err);
         } else {
@@ -32,9 +33,9 @@ exports.book_edit = (req, res, next) => {
 
 // Delete book details
 exports.book_delete = (req, res, next) => {
-    const { bookid } = req.body;
+    const { bookId } = req.body;
     const userID = req.decoded.id;
-    Book.findOneAndRemove({ _id: bookid, userID: userID }, async(err, book_r) => {
+    Book.findOneAndRemove({ _id: bookId, userID: userID }, async(err, book_r) => {
         if (err) {
             return next(err);
         } else {
@@ -72,13 +73,23 @@ exports.book_titles = (req, res, next) => {
 // Get Book detail by ID
 
 exports.book_detail = (req, res, next) => {
-    const { bookid } = req.body;
+    const { bookId } = req.body;
     const userID = req.decoded.id;
-    Book.findOne({ _id: bookid }, "-userID -receiverID -receivedTimestamp -wishedUsers", async(err, book_r) => {
+    Book.findOne({ _id: bookId }, " -receiverID -receivedTimestamp -wishedUsers", (err, book_r) => {
         if (err) {
             return next(err);
         } else {
-            return res.status(200).send(book_r);
+            User.findById({ _id: book_r.userID }, "name photo", (err, user) => {
+                if (err) {
+                    return next(err);
+                } else {
+                    return res.status(200).send({
+                        userName: user.name,
+                        profile: user.photo,
+                        ...book_r._doc,
+                    });
+                }
+            });
         }
     });
 }

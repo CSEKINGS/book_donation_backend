@@ -64,10 +64,10 @@ router.route("/books/search/:pageNo").get(tokenChecker, userSearch);
 router.route("/books/create").post(tokenChecker, bookCRUD.book_create);
 
 // Edit book detail
-router.route("/books/edit").post(tokenChecker, bookCRUD.book_edit);
+router.route("/books/edit").put(tokenChecker, bookCRUD.book_edit);
 
 // Delete books
-router.route("/books/delete").post(tokenChecker, bookCRUD.book_delete);
+router.route("/books/delete").delete(tokenChecker, bookCRUD.book_delete);
 
 // Book locations
 router.route("/books/locations").get(tokenChecker, bookCRUD.book_map);

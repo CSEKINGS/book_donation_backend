@@ -1,4 +1,3 @@
-
 const Book = require("../../../models/book-model");
 
 /**
@@ -8,31 +7,29 @@ const Book = require("../../../models/book-model");
  * @param {String} query
  */
 
-module.exports = async (coordinates, pageNo, query) => {
+module.exports = async(coordinates, pageNo, query) => {
     nPerPage = 10;
     let books;
     try {
         Book.collection.createIndex({ location: "2dsphere" });
         books = await Book.find({
-            $or: [
-                { name: { '$regex': query, '$options': 'i' } },
-                { author: { '$regex': query, '$options': 'i' } },
-                { description: { '$regex': query, '$options': 'i' } }
-            ],
-            location: {
-                $near:
-                {
-                    $geometry: {
-                        type: "Point",
-                        coordinates: coordinates
-                    },
+                $or: [
+                    { name: { '$regex': query, '$options': 'i' } },
+                    { author: { '$regex': query, '$options': 'i' } },
+                    { description: { '$regex': query, '$options': 'i' } }
+                ],
+                location: {
+                    $near: {
+                        $geometry: {
+                            type: "Point",
+                            coordinates: coordinates
+                        },
+                    }
                 }
-            }
-        }, "_id name photo author categeory uploadDate")
+            }, "_id name photo author categeory uploadDate description")
             .skip((nPerPage * (pageNo - 1))).limit(nPerPage);
         return { books }
-    }
-    catch (err) {
+    } catch (err) {
         return { err }
     }
 }
