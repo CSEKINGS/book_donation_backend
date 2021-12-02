@@ -6,8 +6,9 @@ const Mailer = require("../mail_services/sendMail");
 exports.book_buy = (req, res, next) => {
     const { bookId, message } = req.body;
     const userID = req.decoded.id;
+    const time = new Date();
     Book.findOneAndUpdate({ _id: bookId, userID: { $ne: userID }, receiverID: { $ne: userID } }, {
-            $push: { receiverID: { userID, message } }
+            $push: { receiverID: { userID, message, time } }
         },
         (err, book_r) => {
             if (err) {
