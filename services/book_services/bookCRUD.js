@@ -1,17 +1,27 @@
 const Book = require("../../models/book-model");
 const User = require("../../models/user-model");
 
+
 // Create book
 exports.book_create = async(req, res, next) => {
     const { name, author, categeory, description, photo, location, quantity } = req.body;
     const userID = req.decoded.id;
-    Book.create({ name, author, photo, categeory, description, userID, location, quantity }, async(err, book_r) => {
-        if (err) {
-            return next(err);
-        } else {
-            return res.status(201).send({ status: "success", message: "Book created successfully" });
-        }
-    });
+    const bookCreateCallback = (location) => {
+        Book.create({ name, author, photo, categeory, description, userID, location, quantity }, async(err, book_r) => {
+            if (err) {
+                return next(err);
+            } else {
+                return res.status(201).send({ status: "success", message: "Book created successfully" });
+            }
+        });
+    }
+    if (!location.length) {
+        User.findById({ _id: userID }, "location", (err, user) => {
+            if (err) return next(err);
+            else bookCreateCallback(user.location);
+        })
+    } else bookCreateCallback(location);
+
 }
 
 // Edit book details

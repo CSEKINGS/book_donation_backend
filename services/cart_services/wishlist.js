@@ -21,7 +21,7 @@ exports.wishlist_add = async(req, res, next) => {
 // Wishlist
 exports.wishlist_view = async(req, res, next) => {
     const userID = req.decoded.id;
-    await Book.find({ wishedUsers: { $in: userID } }, "_id name photo author categeory uploadDate", (err, books) => {
+    await Book.find({ wishedUsers: { $in: userID } }, "_id name photo description author categeory uploadDate", (err, books) => {
         if (err) {
             return next(err);
         } else {
