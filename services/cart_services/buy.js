@@ -6,7 +6,7 @@ const Mailer = require("../mail_services/sendMail");
 exports.book_buy = async(req, res, next) => {
     const { bookId } = req.body;
     const userID = req.decoded.id;
-    await Book.findOneAndUpdate({ _id: bookId, userID: { $ne: userID } }, { $push: { receiverID: userID } }, (err, book_r) => {
+    await Book.findOneAndUpdate({ _id: bookId, userID: { $ne: userID }, receiverID: { $ne: userID } }, { $push: { receiverID: userID } }, (err, book_r) => {
         if (err) {
             return next(err);
         } else {

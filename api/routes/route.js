@@ -45,6 +45,9 @@ router.route("/user/notification").get(tokenChecker, notification.book_notificat
 // Add to wishlist
 router.route("/user/wish").post(tokenChecker, wishlist.wishlist_add);
 
+// Add to wishlist
+router.route("/user/removewish").post(tokenChecker, wishlist.wishlist_remove);
+
 // Wishlist
 router.route("/user/wishlist").get(tokenChecker, wishlist.wishlist_view);
 

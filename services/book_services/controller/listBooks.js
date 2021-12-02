@@ -26,7 +26,7 @@ module.exports = async(coordinates, pageNo, query) => {
                         },
                     }
                 }
-            }, "_id name photo author categeory uploadDate description userID")
+            }, "_id name photo author categeory uploadDate description userID wishedUsers")
             .skip((nPerPage * (pageNo - 1))).limit(nPerPage);
         return { books }
     } catch (err) {
