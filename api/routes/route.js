@@ -85,6 +85,9 @@ router.route("/books/detail").post(tokenChecker, bookCRUD.book_detail);
 // Buy book
 router.route("/buy/request").post(tokenChecker, buy.book_buy);
 
+// Cancel Buy book request
+router.route("/buy/cancel").post(tokenChecker, buy.book_buy_cancel);
+
 // View Book owner detail
 router.route("/buy/owner").post(tokenChecker, buy.book_owner);
 
