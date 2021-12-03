@@ -52,9 +52,10 @@ router.route("/user/removewish").post(tokenChecker, wishlist.wishlist_remove);
 router.route("/user/wishlist").get(tokenChecker, wishlist.wishlist_view);
 
 /* Book Service */
+router.route("/books/dashboard").get(tokenChecker, homeView_books.dashboard);
 
 //Homeview Request || All books with Lazy Loading
-router.route("/books/all/:pageNo").get(tokenChecker, homeView_books);
+router.route("/books/all/:pageNo").get(tokenChecker, homeView_books.books);
 
 // Search books titles
 router.route("/books/titles").get(tokenChecker, bookCRUD.book_titles);

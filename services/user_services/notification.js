@@ -12,8 +12,15 @@ exports.book_notification = async(req, res, next) => {
             books.forEach((a_book) => {
                 user_book.push([...new Set(a_book.receiverID)].filter(Boolean).map((val) => ({...val, bookID: a_book._id })))
             });
+            user_book = user_book.flat();
         }
     });
-    console.log(user_book.flat());
-    return res.status(200).send(user_book.flat());
+    for (var val in user_book) {
+        const user = await User.findOne({ _id: user_book[val].userID }, "name photo");
+        user_book[val] = {
+            ...user_book[val],
+            ...user._doc
+        };
+    }
+    return res.status(200).send(user_book);
 }

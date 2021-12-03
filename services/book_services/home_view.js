@@ -1,5 +1,8 @@
 const listBooks = require("./controller/listBooks");
 const locationFinder = require("./controller/locationFinder");
+const Book = require("../../models/book-model");
+const User = require("../../models/user-model");
+
 /**
  * HomeView 
  * @param {Request} req
@@ -7,7 +10,20 @@ const locationFinder = require("./controller/locationFinder");
  * @param {NextFunction} next
  */
 
-module.exports = async(req, res, next) => {
+exports.dashboard = async(req, res, next) => {
+    const userID = req.decoded.id;
+    const books = await Book.find({});
+    const users = await User.find({});
+    return res.status(200).send({
+        books: books.length,
+        users: users.length,
+        transaction: 5,
+        notifications: [...new Set(books.map((book) => book.userID === userID && book.receiverID))].flat().filter(Boolean).length
+    });
+
+}
+
+exports.books = async(req, res, next) => {
     const pageNo = req.params.pageNo || 1,
         coordinates = await locationFinder(req.decoded.id);
     if (coordinates.err) {
