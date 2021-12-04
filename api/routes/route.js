@@ -34,7 +34,7 @@ router.route("/auth/forget").post(authentication.forget);
 router.route("/auth/reset").post(tokenChecker, authentication.resetPasword);
 
 //Verify email
-router.route("/auth/verify").post(tokenChecker, authentication.verifyEmail);
+router.route("/auth/verify").get(tokenChecker, authentication.verifyEmail);
 
 //Generate access token by refresh token
 router.route("/token").get(tokenController);
