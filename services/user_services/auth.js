@@ -19,6 +19,7 @@ exports.login = async(req, res, next) => {
             if (!user) {
                 return next({ code: 404, message: "user not found" });
             } else {
+                console.log(!user.verified)
                 if (!user.verified) {
                     var token = await generateToken({ id: user._id, mode: "verification" });
                     const mailer = await Mailer({ email: req.body.email, subject: "Verify Email", profile: `Click here to verify your email <a href='${process.env.FRONTEND}/account/signin?token=${token}'>Click Here</a>` });
@@ -28,8 +29,10 @@ exports.login = async(req, res, next) => {
                         err.message = "Connection refused or inability to open an SMTP stream"
                         return next(err);
                     }
+                    console.log(mailer.err)
                     return next({
                         err: true,
+                        status: 403,
                         message: "Please verify your email!",
                     });
                 }
