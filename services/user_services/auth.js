@@ -2,12 +2,14 @@ const bcrypt = require("bcryptjs");
 
 const User = require("../../models/user-model");
 const isEmpty = require("../../api/validation/userValidation").isEmpty;
+const Mailer = require("../mail_services/sendMail");
 
 const {
     generateToken,
     generateRefreshToken,
 } = require("../token_services/token-controller");
 
+//login user
 exports.login = async(req, res, next) => {
     const validation =
         require("../../api/validation/userValidation").loginValidation(req.body);
@@ -17,6 +19,20 @@ exports.login = async(req, res, next) => {
             if (!user) {
                 return next({ code: 404, message: "user not found" });
             } else {
+                if (!user.verified) {
+                    var token = await generateToken({ id: user._id, mode: "verification" });
+                    const mailer = await Mailer({ email: req.body.email, subject: "Verify Email", profile: `Click here to verify your email <a href='${process.env.FRONTEND}/account/signin?token=${token}'>Click Here</a>` });
+                    if (mailer.err) {
+                        err = mailer.err
+                        err.code = 111
+                        err.message = "Connection refused or inability to open an SMTP stream"
+                        return next(err);
+                    }
+                    return next({
+                        err: true,
+                        message: "Please verify your email!",
+                    });
+                }
                 bcrypt.compare(
                     req.body.password,
                     user.password,
@@ -50,11 +66,12 @@ exports.login = async(req, res, next) => {
     }
 };
 
+//register a new user
 exports.register = async(req, res, next) => {
     const validation =
         require("../../api/validation/userValidation").registerValidation(req.body);
     if (isEmpty(validation)) {
-        User.findOne({ email: req.body.email }).then((err, user) => {
+        User.findOne({ email: req.body.email }, (err, user) => {
             if (err) return next(err);
             if (user) {
                 return next({ code: 401, message: "Email already Exist" });
@@ -91,15 +108,17 @@ exports.register = async(req, res, next) => {
                                     err.code = 500;
                                     return next(err);
                                 } else {
-                                    var token = await generateToken(user_r._id);
-                                    var refreshToken = await generateRefreshToken(user_r._id);
-                                    if (token && refreshToken) {
-                                        return res.status(201).send({
-                                            auth: true,
-                                            message: "Logged In",
-                                            token: token,
-                                            refreshToken: refreshToken,
-                                        });
+                                    var token = await generateToken({ id: user_r._id, mode: "verification" });
+                                    if (token) {
+                                        const mailer = await Mailer({ email: email, subject: "Verify Email", profile: `Click here to verify your email <a href='http://localhost:3000/account/login?token=${token}'>Click Here</a>` });
+                                        if (mailer.err) {
+                                            err = mailer.err
+                                            err.code = 111
+                                            err.message = "Connection refused or inability to open an SMTP stream"
+                                            return next(err);
+                                        } else {
+                                            return res.status(200).send("User created successfully!");
+                                        }
                                     } else {
                                         return next({
                                             code: 500,
@@ -115,6 +134,105 @@ exports.register = async(req, res, next) => {
         });
     } else {
         return next(validation);
+    }
+};
+
+//Verify Email
+exports.verifyEmail = (req, res, next) => {
+    const userID = req.decoded.id;
+    if (userID.mode === "verification") {
+        User.findByIdAndUpdate({ _id: userID.id }, {
+                $set: {
+                    verified: true
+                },
+            },
+            (err) => {
+                if (err) {
+                    return next(err);
+                } else {
+                    return res.status(201).send({
+                        status: "success",
+                        message: "Email verified successfully",
+                    });
+                }
+            }
+        )
+    } else {
+        return next({
+            err: true,
+            status: 403,
+            message: "Verification invalid"
+        })
+    }
+};
+
+//forget password
+exports.forget = (req, res, next) => {
+    const validation =
+        require("../../api/validation/userValidation").forgetValidation(req.body);
+    if (isEmpty(validation)) {
+        User.findOne({ email: req.body.email }, async(err, user) => {
+            if (err) return next(err);
+            else {
+                var token = await generateToken({
+                    id: user._id,
+                    email: user.email,
+                    mode: 'RESET_PASSWORD'
+                });
+                if (token) {
+                    const mailer = await Mailer({ email: user.email, subject: "Password Reset", profile: `Click here to reset your password <a href='http://localhost:3000/account/reset?token=${token}'>Click Here</a>` });
+                    if (mailer.err) {
+                        err = mailer.err
+                        err.code = 111
+                        err.message = "Connection refused or inability to open an SMTP stream"
+                        return next(err);
+                    } else {
+                        return res.status(200).send("Forget password requested successfully");
+                    }
+                } else {
+                    return next({ code: 500, message: "Failed to generate token" });
+                }
+            }
+        });
+    } else {
+        return next(validation);
+    }
+};
+
+//Reset password
+exports.resetPasword = async(req, res, next) => {
+    const { password } = req.body;
+    const userID = req.decoded.id;
+    if (userID.mode === "RESET_PASSWORD") {
+        bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(password, salt, (err, hash) => {
+                if (err) {
+                    return next(err);
+                }
+                User.findByIdAndUpdate({ _id: userID.id }, {
+                        $set: {
+                            password: hash
+                        },
+                    },
+                    async(err) => {
+                        if (err) {
+                            return next(err);
+                        } else {
+                            return res.status(201).send({
+                                status: "success",
+                                message: "Password resetted successfully",
+                            });
+                        }
+                    }
+                );
+            });
+        });
+    } else {
+        return next({
+            err: true,
+            status: 403,
+            message: "Verification failed"
+        })
     }
 };
 
@@ -148,7 +266,7 @@ exports.user_delete = (req, res, next) => {
 exports.user_edit = (req, res, next) => {
     const { photo, name, password, mobileNo, address, about, location } = req.body;
     const userLog = req.connection.remoteAddress;
-    userID = req.decoded.id;
+    const userID = req.decoded.id;
     bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(password, salt, (err, hash) => {
             if (err) {

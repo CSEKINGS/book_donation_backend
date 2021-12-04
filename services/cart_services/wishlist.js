@@ -8,7 +8,6 @@ exports.wishlist_add = async(req, res, next) => {
         if (err) {
             return next(err);
         } else {
-            console.log(book_r)
             if (book_r) {
                 return res.status(200).send("Book added your wishlist successfully");
             } else {

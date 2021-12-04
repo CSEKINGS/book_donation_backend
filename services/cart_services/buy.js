@@ -26,7 +26,6 @@ exports.book_buy = (req, res, next) => {
                         } else {
                             return res.status(200).send("Book requested successfully");
                         }
-
                     });
                 } else {
                     return next({ code: 404, message: "Book not found" });

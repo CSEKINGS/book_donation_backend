@@ -27,6 +27,15 @@ router.route('/auth/login').post(authentication.login);
 //Register
 router.route("/auth/register").post(authentication.register);
 
+//Forget
+router.route("/auth/forget").post(authentication.forget);
+
+//Reset password
+router.route("/auth/reset").post(tokenChecker, authentication.resetPasword);
+
+//Verify email
+router.route("/auth/verify").post(tokenChecker, authentication.verifyEmail);
+
 //Generate access token by refresh token
 router.route("/token").get(tokenController);
 

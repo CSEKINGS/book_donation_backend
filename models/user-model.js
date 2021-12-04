@@ -21,23 +21,27 @@ let Userschema = new mongoose.Schema({
         type: String,
         required: true
     },
-/// use string for phone number instead of number
+    /// use string for phone number instead of number
     mobileNo: {
         type: String,
-        required:true,
+        required: true,
         unique: true
     },
     address: {
         type: String,
-        required:true
+        required: true
     },
-    location:{
-        type:Array,
-        required:true
-      },
+    location: {
+        type: Array,
+        required: true
+    },
     about: {
         type: String,
         default: "Nothing to show"
+    },
+    verified: {
+        type: Boolean,
+        default: false
     },
     userLog: [{
         ip: { //request.connection.remoteAddress
@@ -46,7 +50,7 @@ let Userschema = new mongoose.Schema({
         },
         timeStamp: {
             type: String,
-            default: function () { return this.ip && new Date().toLocaleString(); }
+            default: function() { return this.ip && new Date().toLocaleString(); }
         },
         _id: false
     }],
