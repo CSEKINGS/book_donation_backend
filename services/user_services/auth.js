@@ -283,7 +283,6 @@ exports.user_edit = (req, res, next) => {
                     } else if (!isMatch) {
                         return next({ code: 401, message: "Invalid Credentials" });
                     } else {
-                        console.log('ok');
                         User.findByIdAndUpdate({ _id: userID }, {
                                 $set: {
                                     photo,
