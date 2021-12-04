@@ -112,7 +112,9 @@ exports.register = async(req, res, next) => {
                                 } else {
                                     var token = await generateToken({ id: user_r._id, mode: "verification" });
                                     if (token) {
+                                        console.log('ok')
                                         const mailer = await Mailer({ email: email, subject: "Verify Email", profile: `Click here to verify your email <a href='${process.env.FRONTEND}/account/login?token=${token}'>Click Here</a>` });
+                                        console.log(mailer);
                                         if (mailer.err) {
                                             err = mailer.err
                                             err.code = 111
