@@ -270,33 +270,38 @@ exports.user_edit = (req, res, next) => {
     const { photo, name, password, mobileNo, address, about, location } = req.body;
     const userLog = req.connection.remoteAddress;
     const userID = req.decoded.id;
-    bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(password, salt, (err, hash) => {
+    bcrypt.compare(
+        password,
+        user.password,
+        async(err, isMatch) => {
             if (err) {
                 return next(err);
-            }
-            User.findByIdAndUpdate({ _id: userID }, {
-                    $set: {
-                        photo,
-                        name,
-                        mobileNo,
-                        address,
-                        about,
-                        location,
-                        userLog: { ip: userLog },
+            } else if (!isMatch) {
+                return next({ code: 401, message: "Invalid Credentials" });
+            } else {
+                User.findByIdAndUpdate({ _id: userID }, {
+                        $set: {
+                            photo,
+                            name,
+                            mobileNo,
+                            address,
+                            about,
+                            location,
+                            userLog: { ip: userLog },
+                        },
                     },
-                },
-                async(err) => {
-                    if (err) {
-                        return next(err);
-                    } else {
-                        return res.status(201).send({
-                            status: "success",
-                            message: "User detail updated successfully",
-                        });
+                    async(err) => {
+                        if (err) {
+                            return next(err);
+                        } else {
+                            return res.status(201).send({
+                                status: "success",
+                                message: "User detail updated successfully",
+                            });
+                        }
                     }
-                }
-            );
-        });
-    });
+                );
+            }
+        }
+    );
 };
