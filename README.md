@@ -42,5 +42,4 @@ Check out current hosting here: https://book-donation-api.herokuapp.com/
    ```http
    localhost:5000/ => Please visit to view Documantation
 
-
    ```

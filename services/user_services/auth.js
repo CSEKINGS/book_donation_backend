@@ -270,7 +270,7 @@ exports.user_edit = (req, res, next) => {
     const { photo, name, password, mobileNo, address, about, location } = req.body;
     const userLog = req.connection.remoteAddress;
     const userID = req.decoded.id;
-    User.findOne({ _id: userID }, "-password", async(err, user) => {
+    User.findOne({ _id: userID }, async(err, user) => {
         if (err) {
             return next(err);
         } else {
@@ -283,6 +283,7 @@ exports.user_edit = (req, res, next) => {
                     } else if (!isMatch) {
                         return next({ code: 401, message: "Invalid Credentials" });
                     } else {
+                        console.log('ok');
                         User.findByIdAndUpdate({ _id: userID }, {
                                 $set: {
                                     photo,
