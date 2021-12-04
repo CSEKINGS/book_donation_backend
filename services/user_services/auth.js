@@ -19,9 +19,9 @@ exports.login = async(req, res, next) => {
             if (!user) {
                 return next({ code: 404, message: "user not found" });
             } else {
-                console.log(!user.verified)
+                console.log(user.verified)
                 if (!user.verified) {
-                    var token = await generateToken({ id: user._id, mode: "verification" });
+                    var token = await generateToken({ id: user._id, mode: "VERIFICATION" });
                     const mailer = await Mailer({ email: req.body.email, subject: "Verify Email", profile: `Click here to verify your email <a href='${process.env.FRONTEND}/account/signin?token=${token}'>Click Here</a>` });
                     if (mailer.err) {
                         err = mailer.err
@@ -29,37 +29,36 @@ exports.login = async(req, res, next) => {
                         err.message = "Connection refused or inability to open an SMTP stream"
                         return next(err);
                     }
-                    console.log(mailer.err)
                     return next({
-                        err: true,
                         status: 403,
                         message: "Please verify your email!",
                     });
-                }
-                bcrypt.compare(
-                    req.body.password,
-                    user.password,
-                    async(err, isMatch) => {
-                        if (err) {
-                            return next(err);
-                        } else if (!isMatch) {
-                            return next({ code: 401, message: "Invalid Credentials" });
-                        } else {
-                            var token = await generateToken(user._id);
-                            var refreshToken = await generateRefreshToken(user._id);
-                            if (token && refreshToken) {
-                                return res.send({
-                                    auth: true,
-                                    message: "Logged In",
-                                    token: token,
-                                    refreshToken: refreshToken,
-                                });
+                } else {
+                    bcrypt.compare(
+                        req.body.password,
+                        user.password,
+                        async(err, isMatch) => {
+                            if (err) {
+                                return next(err);
+                            } else if (!isMatch) {
+                                return next({ code: 401, message: "Invalid Credentials" });
                             } else {
-                                return next({ code: 500, message: "Failed to generate token" });
+                                var token = await generateToken(user._id);
+                                var refreshToken = await generateRefreshToken(user._id);
+                                if (token && refreshToken) {
+                                    return res.send({
+                                        auth: true,
+                                        message: "Logged In",
+                                        token: token,
+                                        refreshToken: refreshToken,
+                                    });
+                                } else {
+                                    return next({ code: 500, message: "Failed to generate token" });
+                                }
                             }
                         }
-                    }
-                );
+                    );
+                }
             }
         } catch (err) {
             return next(err);
@@ -113,7 +112,7 @@ exports.register = async(req, res, next) => {
                                 } else {
                                     var token = await generateToken({ id: user_r._id, mode: "verification" });
                                     if (token) {
-                                        const mailer = await Mailer({ email: email, subject: "Verify Email", profile: `Click here to verify your email <a href='http://localhost:3000/account/login?token=${token}'>Click Here</a>` });
+                                        const mailer = await Mailer({ email: email, subject: "Verify Email", profile: `Click here to verify your email <a href='${process.env.FRONTEND}/account/login?token=${token}'>Click Here</a>` });
                                         if (mailer.err) {
                                             err = mailer.err
                                             err.code = 111
@@ -143,7 +142,7 @@ exports.register = async(req, res, next) => {
 //Verify Email
 exports.verifyEmail = (req, res, next) => {
     const userID = req.decoded.id;
-    if (userID.mode === "verification") {
+    if (userID.mode === "VERIFICATION") {
         User.findByIdAndUpdate({ _id: userID.id }, {
                 $set: {
                     verified: true
@@ -183,7 +182,7 @@ exports.forget = (req, res, next) => {
                     mode: 'RESET_PASSWORD'
                 });
                 if (token) {
-                    const mailer = await Mailer({ email: user.email, subject: "Password Reset", profile: `Click here to reset your password <a href='http://localhost:3000/account/reset?token=${token}'>Click Here</a>` });
+                    const mailer = await Mailer({ email: user.email, subject: "Password Reset", profile: `Click here to reset your password <a href='${process.env.FRONTEND}/account/reset?token=${token}'>Click Here</a>` });
                     if (mailer.err) {
                         err = mailer.err
                         err.code = 111
