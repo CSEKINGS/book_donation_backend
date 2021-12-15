@@ -1,5 +1,4 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require('cors');
 const route = require('./api/routes/route');
 
@@ -31,9 +30,25 @@ app.use('/api', route);
 
 app.use(errorHandler);
 
+const server = require('http').createServer(app);
+const io = require('socket.io')(server, { cors: { origin: process.env.FRONTEND, methods: ["GET", "POST"] } });
+
+io.on('connection', (client) => {
+    client.on('join', roomId => {
+        console.log('room', roomId);
+        client.roomId = roomId
+        client.join(roomId);
+        io.in(roomId).emit('join', "Successfull!");
+    });
+    client.on('message-sent', msg => {
+        console.log('message', msg);
+        io.in(client.roomId).emit("message-received", msg);
+    })
+});
+
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log("Sever running on port " + PORT);
 });
 
