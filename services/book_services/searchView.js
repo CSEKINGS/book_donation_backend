@@ -20,7 +20,6 @@ module.exports =async (req,res,next) => {
         return next(err);
     }
     return res.status(200).send(bookTitles.books);
-   
 }
 
 

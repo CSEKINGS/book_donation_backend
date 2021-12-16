@@ -3,11 +3,11 @@ const User = require("../../models/user-model");
 
 
 // Create book
-exports.book_create = async(req, res, next) => {
+exports.book_create = async (req, res, next) => {
     const { name, author, categeory, description, photo, location, quantity } = req.body;
     const userID = req.decoded.id;
     const bookCreateCallback = (location) => {
-        Book.create({ name, author, photo, categeory, description, userID, location, quantity }, async(err, book_r) => {
+        Book.create({ name, author, photo, categeory, description, userID, location, quantity }, async (err, book_r) => {
             if (err) {
                 return next(err);
             } else {
@@ -21,14 +21,13 @@ exports.book_create = async(req, res, next) => {
             else bookCreateCallback(user.location);
         })
     } else bookCreateCallback(location);
-
 }
 
 // Edit book details
 exports.book_edit = (req, res, next) => {
     const { bookId, name, author, categeory, description, photo, location, quantity } = req.body;
     const userID = req.decoded.id;
-    Book.findOneAndUpdate({ _id: bookId, userID: userID }, { $set: { name, author, photo, categeory, description, location, quantity } }, async(err, book_r) => {
+    Book.findOneAndUpdate({ _id: bookId, userID: userID }, { $set: { name, author, photo, categeory, description, location, quantity } }, async (err, book_r) => {
         if (err) {
             return next(err);
         } else {
@@ -45,7 +44,7 @@ exports.book_edit = (req, res, next) => {
 exports.book_delete = (req, res, next) => {
     const { bookId } = req.body;
     const userID = req.decoded.id;
-    Book.findOneAndRemove({ _id: bookId, userID: userID }, async(err, book_r) => {
+    Book.findOneAndRemove({ _id: bookId, userID: userID }, async (err, book_r) => {
         if (err) {
             return next(err);
         } else {
@@ -85,21 +84,25 @@ exports.book_titles = (req, res, next) => {
 exports.book_detail = (req, res, next) => {
     const { bookId } = req.body;
     const userID = req.decoded.id;
-    Book.findOne({ _id: bookId }, " -receiverID -receivedTimestamp -wishedUsers", (err, book_r) => {
-        if (err) {
-            return next(err);
-        } else {
-            User.findById({ _id: book_r.userID }, "name photo", (err, user) => {
-                if (err) {
-                    return next(err);
-                } else {
-                    return res.status(200).send({
-                        userName: user.name,
-                        profile: user.photo,
-                        ...book_r._doc,
-                    });
-                }
-            });
-        }
-    });
+    if (bookId) {
+        Book.findOne({ _id: bookId }, " -receiverID -receivedTimestamp -wishedUsers", (err, book_r) => {
+            if (err) {
+                return next(err);
+            } else {
+                User.findById({ _id: book_r.userID }, "name photo", (err, user) => {
+                    if (err) {
+                        return next(err);
+                    } else {
+                        return res.status(200).send({
+                            userName: user.name,
+                            profile: user.photo,
+                            ...book_r._doc,
+                        });
+                    }
+                });
+            }
+        });
+    } else {
+        return next({ status: "Failed", message: "bookId is required" })
+    }
 }

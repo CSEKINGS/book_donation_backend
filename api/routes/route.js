@@ -5,6 +5,7 @@ const router = express.Router();
 const authentication = require("../../services/user_services/auth");
 const wishlist = require("../../services/cart_services/wishlist");
 const notification = require("../../services/user_services/notification");
+const chat = require("../../services/user_services/chat");
 const homeView_books = require("../../services/book_services/home_view");
 const userSearch = require("../../services/book_services/searchView");
 const bookCRUD = require("../../services/book_services/bookCRUD");
@@ -50,6 +51,9 @@ router.route("/user/edit").put(tokenChecker, authentication.user_edit);
 
 // View Book request notification
 router.route("/user/notification").get(tokenChecker, notification.book_notification);
+
+// View Book CHat
+router.route("/user/chat").post(tokenChecker, chat.book_chat);
 
 // Add to wishlist
 router.route("/user/wish").post(tokenChecker, wishlist.wishlist_add);

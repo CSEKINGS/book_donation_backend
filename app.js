@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require('cors');
 const route = require('./api/routes/route');
-
 const errorHandler = require("./api/middleware/errorHandling");
 
 const connectDB = require("./configuration/dbConnection");
@@ -11,6 +10,8 @@ require('dotenv').config();
 const app = express();
 
 connectDB();
+
+const Chat = require("./models/chat-model");
 
 app.use(express.json({ limit: '50mb' }));
 
@@ -34,15 +35,20 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server, { cors: { origin: process.env.FRONTEND, methods: ["GET", "POST"] } });
 
 io.on('connection', (client) => {
-    client.on('join', roomId => {
+    client.on('online', roomId => {
         console.log('room', roomId);
         client.roomId = roomId
-        client.join(roomId);
-        io.in(roomId).emit('join', "Successfull!");
+        // Chat.find({ chatId: roomId }, (err, chats) => {
+        //     if (err) {
+        //         return next(err);
+        //     } else {
+        //         io.in(roomId).emit('notifications', chats);
+        //     }
+        // })
     });
     client.on('message-sent', msg => {
-        console.log('message', msg);
-        io.in(client.roomId).emit("message-received", msg);
+        Chat.create(msg);
+        io.in(msg.chatId).emit("message-received", msg);
     })
 });
 

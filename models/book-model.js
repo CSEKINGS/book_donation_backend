@@ -46,12 +46,12 @@ BookSchema = new mongoose.Schema({
         default: 1
     },
     receiverID: {
-        type: [Object],
+        type: [String],
         default: null
     },
     receivedTimestamp: {
         type: String,
-        default: function() { return this.receiverID && new Date().toLocaleString(); }
+        default: function () { return this.receiverID && new Date().toLocaleString(); }
     },
     wishedUsers: {
         type: [Object],
