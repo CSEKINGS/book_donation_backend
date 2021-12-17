@@ -89,17 +89,21 @@ exports.book_detail = (req, res, next) => {
             if (err) {
                 return next(err);
             } else {
-                User.findById({ _id: book_r.userID }, "name photo", (err, user) => {
-                    if (err) {
-                        return next(err);
-                    } else {
-                        return res.status(200).send({
-                            userName: user.name,
-                            profile: user.photo,
-                            ...book_r._doc,
-                        });
-                    }
-                });
+                if (book_r) {
+                    User.findById({ _id: book_r.userID }, "name photo", (err, user) => {
+                        if (err) {
+                            return next(err);
+                        } else {
+                            return res.status(200).send({
+                                userName: user.name,
+                                profile: user.photo,
+                                ...book_r._doc,
+                            });
+                        }
+                    });
+                } else {
+                    return next({ status: "Failed", message: "book not found" })
+                }
             }
         });
     } else {
