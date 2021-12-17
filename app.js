@@ -37,19 +37,12 @@ const io = require('socket.io')(server, { cors: { origin: process.env.FRONTEND, 
 io.on('connection', (client) => {
     client.on('online', roomId => {
         console.log('room', roomId);
-        client.roomId = roomId
-        // Chat.find({ chatId: roomId }, (err, chats) => {
-        //     if (err) {
-        //         return next(err);
-        //     } else {
-        //         io.in(roomId).emit('notifications', chats);
-        //     }
-        // })
+        client.join(roomId);
     });
     client.on('message-sent', msg => {
         Chat.create(msg);
         io.in(msg.chatId).emit("message-received", msg);
-    })
+    });
 });
 
 const PORT = process.env.PORT || 5000;
