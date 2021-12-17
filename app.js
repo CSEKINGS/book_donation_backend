@@ -31,7 +31,12 @@ app.use('/api', route);
 
 app.use(errorHandler);
 
-const server = require('http').createServer(app);
+const PORT = process.env.PORT || 5000;
+
+const server = app.listen(PORT, () => {
+    console.log("Sever running on port " + PORT);
+});
+
 const io = require('socket.io')(server, { cors: { origin: process.env.FRONTEND, methods: ["GET", "POST"] } });
 
 io.on('connection', (client) => {
@@ -45,12 +50,6 @@ io.on('connection', (client) => {
 });
 
 global.io = io;
-
-const PORT = process.env.PORT || 5000;
-
-server.listen(PORT, () => {
-    console.log("Sever running on port " + PORT);
-});
 
 process.on('unhandledRejection', error => {
     console.log('unhandledRejection', error.message);
