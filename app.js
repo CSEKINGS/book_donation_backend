@@ -36,7 +36,6 @@ const io = require('socket.io')(server, { cors: { origin: process.env.FRONTEND, 
 
 io.on('connection', (client) => {
     client.on('online', roomId => {
-        console.log('room', roomId);
         client.join(roomId);
     });
     client.on('message-sent', msg => {
@@ -44,6 +43,8 @@ io.on('connection', (client) => {
         io.in(msg.chatId).emit("message-received", msg);
     });
 });
+
+global.io = io;
 
 const PORT = process.env.PORT || 5000;
 

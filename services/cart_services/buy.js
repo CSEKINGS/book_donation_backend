@@ -13,10 +13,12 @@ exports.book_buy = (req, res, next) => {
             if (err) {
                 return next(err);
             } else {
-                Chat.create({ chatId: book_r.userID + book_r._id + userID, userID, message }, (err, chat) => {
+                const chatId = book_r.userID + book_r._id + userID;
+                Chat.create({ chatId: chatId, userID, message }, (err, chat) => {
                     if (err) {
                         return next(err);
                     } else {
+                        global.io.emit('notifications', chatId);
                         return res.status(200).send("Book requested successfully");
                     }
                 });
@@ -36,10 +38,12 @@ exports.book_buy_cancel = (req, res, next) => {
             if (err) {
                 return next(err);
             } else {
-                Chat.deleteMany({ chatId: book_r.userID + book_r._id + userID }, (err, chat) => {
+                const chatId = book_r.userID + book_r._id + userID;
+                Chat.deleteMany({ chatId: chatId }, (err, chat) => {
                     if (err) {
                         return next(err);
                     } else {
+                        global.io.emit('notifications', `${chatId}-cancelled`);
                         return res.status(200).send("Book requested successfully");
                     }
                 });
