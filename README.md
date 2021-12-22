@@ -45,4 +45,4 @@ Check out current hosting here: https://book-donation-api.herokuapp.com/
    ```
 
 # Manual
-![Manual](https://github.com/CSEKINGS/book_donation_backend/blob/master/manual.jpg?raw=true)
+![Manual](https://github.com/CSEKINGS/book_donation_backend/blob/master/views/manual.png?raw=true)
