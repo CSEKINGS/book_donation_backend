@@ -17,14 +17,13 @@ app.use(express.json({ limit: '50mb' }));
 
 app.use(cors());
 
+app.set("view engine", "ejs");
+
 app.get('/', (req, res) => {
-    var params = ['{"email":"","password":""}', '{"name":"","email":"","mobileNo":"","password":"","address":"","photo":"",location:[]}', '{"email":""}-bearer token required', '{"password":""}-bearer token required', 'bearer token required', 'bearer token required', 'bearer token required', 'bearer token required', '{"name":"","email":"",password:"","mobileNo":"","address":"","photo":"",location:[]}-bearer token required', 'bearer token required', '{"chatId":""}-bearer token required', '{"bookId":""}-bearer token required', '{"bookId":""}-bearer token required', 'bearer token required', 'bearer token required', 'bearer token required', 'bearer token required', 'bearer token required', '{"name":"","author":"","categeory":"","description":"","photo":"","location":[]}-bearer token required', '{"name":"","author":"","categeory":"","description":"","photo":"","location":[]}-bearer token required', '{"bookId":""}-bearer token required', 'bearer token required', '{"bookId":""}-bearer token required', '{"bookId":"",message:""}-bearer token required', '{"bookId":""}-bearer token required', '{"bookId":""}-bearer token required']
-    var info = `<h1>Book donation API Backend Documentation</h1><b>root path: /api/</b><table><tr><th>Paths</th><th>Methods</th><th>Parameters</th></tr>`;
-    for (var i in route.stack) {
-        info = info + `<tr><td>${route.stack[i].route.path}</td><td>${Object.keys(route.stack[i].route.methods)}</td><td>${params[i]}</td></tr>`;
-    }
-    info = info + "</table>";
-    res.status(200).send(info);
+    const params = ['{"email":"","password":""}', '{"name":"","email":"","mobileNo":"","password":"","address":"","photo":"",location:[]}', '{"email":""}-bearer token required', '{"password":""}-bearer token required', 'bearer token required', 'bearer token required', 'bearer token required', 'bearer token required', '{"name":"","email":"",password:"","mobileNo":"","address":"","photo":"",location:[]}-bearer token required', 'bearer token required', '{"chatId":""}-bearer token required', '{"bookId":""}-bearer token required', '{"bookId":""}-bearer token required', 'bearer token required', 'bearer token required', 'bearer token required', 'bearer token required', 'bearer token required', '{"name":"","author":"","categeory":"","description":"","photo":"","location":[]}-bearer token required', '{"name":"","author":"","categeory":"","description":"","photo":"","location":[]}-bearer token required', '{"bookId":""}-bearer token required', 'bearer token required', '{"bookId":""}-bearer token required', '{"bookId":"",message:""}-bearer token required', '{"bookId":""}-bearer token required', '{"bookId":""}-bearer token required'];
+    res.render("index", {
+        route: route.stack.map((item, i) => `<tr><td>${item.route.path}</td><td>${Object.keys(item.route.methods)}</td><td>${params[i]}</td></tr>`).join(''),
+    })
 });
 
 app.use('/api', route);

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Book Donation API</title>
+    <style>
+        * {
+            font-family: 'Consolas', Courier, monospace;
+            border-radius: 0.2rem;
+        }
+
+        body {
+            text-align: center;
+            height: 100vh;
+            float: left;
+        }
+        h1{
+            color: rgb(68, 96, 241);
+        }
+
+        th {
+            border: 1px solid rgb(68, 96, 241);
+            color: rgb(68, 96, 241);
+            padding: 0.5rem;
+        }
+
+        td {
+            text-align: left;
+            border: 1px solid rgb(68, 96, 241);
+            padding: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Book donation API Backend Documentation</h1><b>root path: /api/</b>
+    <table>
+        <tr>
+            <th>Paths</th>
+            <th>Methods</th>
+            <th>Parameters</th>
+        </tr>
+    </table>
+    <script>
+        function decodeHtml() {
+            var txt = document.createElement("textarea");
+            txt.innerHTML = '<%= route %>';
+            return txt.value;
+        }
+        document.querySelector('table').innerHTML += decodeHtml();
+    </script>
+</body>
+
+</html>

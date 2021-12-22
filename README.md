@@ -43,3 +43,6 @@ Check out current hosting here: https://book-donation-api.herokuapp.com/
    localhost:5000/ => Please visit to view Documantation
 
    ```
+
+# Manual
+![Manual](https://github.com/CSEKINGS/book_donation_backend/blob/master/manual.jpg?raw=true)
