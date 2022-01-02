@@ -1,0 +1,89 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Book donation",
+    "description": "Book donation API",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:5000/",
+  "basePath": "api/",
+  "tags": [
+    {
+      "name": "Authendications",
+      "description": "API for user authendications"
+    }
+  ],
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": ["Authendications"],
+        "summary": "User login",
+        "operationId": "userLogin",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "login",
+            "in": "body",
+            "description": "Login to get access token",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Login"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/LoginResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Login": {
+      "type": "object",
+      "required": ["email", "password"],
+      "properties": {
+        "email": {
+          "type": "string",
+          "default": "rcse2017@gmail.com"
+        },
+        "password": {
+          "type": "string",
+          "default": "$ivakown7"
+        }
+      }
+    },
+    "LoginResponse": {
+      "type": "object",
+      "properties": {
+        "auth": {
+          "type": "boolean",
+          "default": "true"
+        },
+        "message": {
+          "type": "string",
+          "default": "Logged In"
+        },
+        "token": {
+          "type": "string",
+          "default": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYTg2NWU2ZjcxZjcyMDgwZjcyNjc5MyIsImlhdCI6MTY0MTExNTMyOCwiZXhwIjoxNjQxMTI1MzI4fQ.InEbx6-hYU6J9PYZvEz4zjzmEzKlcPm9VJIgMhwl-pw"
+        },
+        "refreshToken": {
+          "type": "string",
+          "default": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYTg2NWU2ZjcxZjcyMDgwZjcyNjc5MyIsImlhdCI6MTY0MTExNTMyOH0.6VWQbOGclUX4olWVTo-KxHF4gRUK_QxcoV0ZBuJLz5M"
+        }
+      }
+    }
+  }
+}

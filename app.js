@@ -19,6 +19,9 @@ app.use(cors());
 
 app.set("view engine", "ejs");
 
+const swaggerUi = require('swagger-ui-express'),
+    swaggerDocument = require('./swagger.json');
+
 app.get('/', (req, res) => {
     const params = ['{"email":"","password":""}', '{"name":"","email":"","mobileNo":"","password":"","address":"","photo":"",location:[]}', '{"email":""}-bearer token required', '{"password":""}-bearer token required', 'bearer token required', 'bearer token required', 'bearer token required', 'bearer token required', '{"name":"","email":"",password:"","mobileNo":"","address":"","photo":"",location:[]}-bearer token required', 'bearer token required', '{"chatId":""}-bearer token required', '{"bookId":""}-bearer token required', '{"bookId":""}-bearer token required', 'bearer token required', 'bearer token required', 'bearer token required', 'bearer token required', 'bearer token required', '{"name":"","author":"","categeory":"","description":"","photo":"","location":[]}-bearer token required', '{"name":"","author":"","categeory":"","description":"","photo":"","location":[]}-bearer token required', '{"bookId":""}-bearer token required', 'bearer token required', '{"bookId":""}-bearer token required', '{"bookId":"",message:""}-bearer token required', '{"bookId":""}-bearer token required', '{"bookId":""}-bearer token required'];
     res.render("index", {
@@ -29,6 +32,12 @@ app.get('/', (req, res) => {
 app.use('/api', route);
 
 app.use(errorHandler);
+
+app.use(
+    '/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerDocument)
+);
 
 const PORT = process.env.PORT || 5000;
 
