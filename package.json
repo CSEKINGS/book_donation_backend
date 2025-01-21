@@ -11,7 +11,7 @@
         "express": "^4.17.1",
         "http": "^0.0.1-security",
         "jsonwebtoken": "^9.0.0",
-        "mongoose": "^5.12.14",
+        "mongoose": "^6.13.6",
         "nodemailer": "^6.6.2",
         "nodemon": "^2.0.15",
         "socket.io": "^4.4.0",
